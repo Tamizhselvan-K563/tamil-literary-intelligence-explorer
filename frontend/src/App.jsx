@@ -1,7 +1,12 @@
+import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const startVoiceSearch = () => {
+    const [searchResult, setSearchResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+  
+    const startVoiceSearch = () => {
     if ("webkitSpeechRecognition" in window) {
       const recognition = new window.webkitSpeechRecognition();
 
@@ -21,7 +26,7 @@ function App() {
 
       recognition.onerror = () => {
         alert("Voice search could not be started.");
-      };
+      } ;
     } else {
       alert(
         "Voice search is not supported in this browser. Try Google Chrome."
@@ -29,17 +34,41 @@ function App() {
     }
   };
 
-  const exploreWord = () => {
-    const word =
-      document.getElementById("word-search").value;
+ const exploreWord = async () => {
+  const word =
+    document.getElementById("word-search").value.trim();
 
-    if (word.trim() === "") {
-      alert("Please enter a Tamil word.");
-      return;
+  if (word === "") {
+    alert("Please enter a Tamil word.");
+    return;
+  }
+
+  setLoading(true);
+  setError("");
+  setSearchResult(null);
+
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/search?word=${encodeURIComponent(word)}&top_k=3`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch data from backend");
     }
 
-    alert(`Exploring: ${word}`);
-  };
+    const data = await response.json();
+
+    setSearchResult(data);
+
+  } catch (err) {
+    console.error(err);
+    setError(
+      "Unable to connect to the Tamil Literary Intelligence backend."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="app">
@@ -205,6 +234,155 @@ function App() {
         </div>
 
       </section>
+      {/* SEARCH RESULTS */}
+{loading && (
+  <section className="results-section">
+    <div className="section-label">
+      AI ANALYSIS
+    </div>
+
+    <h2>
+      Analyzing Tamil literature...
+    </h2>
+
+    <p>
+      Finding meanings, relationships and literary connections.
+    </p>
+  </section>
+)}
+
+{error && (
+  <section className="results-section">
+    <div className="section-label">
+      ERROR
+    </div>
+
+    <h2>
+      Something went wrong
+    </h2>
+
+    <p>{error}</p>
+  </section>
+)}
+
+{searchResult && !loading && (
+  <section className="results-section">
+
+    <div className="section-label">
+      WORD INTELLIGENCE
+    </div>
+
+    <h2>
+      {searchResult.word}
+    </h2>
+
+    {/* MEANINGS */}
+    <div className="result-block">
+
+      <h3>Tamil Meaning</h3>
+
+      <div className="meaning-list">
+        {searchResult.meanings_tamil?.map(
+          (meaning, index) => (
+            <span key={index}>
+              {meaning}
+            </span>
+          )
+        )}
+      </div>
+
+    </div>
+
+
+    {/* ENGLISH MEANINGS */}
+    <div className="result-block">
+
+      <h3>English Meaning</h3>
+
+      <div className="meaning-list">
+        {searchResult.meanings_english?.map(
+          (meaning, index) => (
+            <span key={index}>
+              {meaning}
+            </span>
+          )
+        )}
+      </div>
+
+    </div>
+
+
+    {/* RELATIONSHIPS */}
+    <div className="result-block">
+
+      <h3>Word Relationships</h3>
+
+      <div className="relationship-list">
+
+        {searchResult.relationships?.map(
+          (item, index) => (
+
+            <div
+              className="relationship-item"
+              key={index}
+            >
+
+              <strong>
+                {item.word}
+              </strong>
+
+              <span>
+                {item.relation}
+              </span>
+
+            </div>
+
+          )
+        )}
+
+      </div>
+
+    </div>
+
+
+    {/* LITERATURE */}
+    <div className="result-block">
+
+      <h3>Literary Connections</h3>
+
+      <div className="literature-list">
+
+        {searchResult.literary_results?.map(
+          (item, index) => (
+
+            <div
+              className="literature-card"
+              key={index}
+            >
+
+              <p>
+                {item.literary_text}
+              </p>
+
+              <div>
+                {item.work} • {item.author}
+              </div>
+
+              <small>
+                Theme: {item.theme}
+              </small>
+
+            </div>
+
+          )
+        )}
+
+      </div>
+
+    </div>
+
+  </section>
+)}
 
 
       {/* DISCOVER */}
