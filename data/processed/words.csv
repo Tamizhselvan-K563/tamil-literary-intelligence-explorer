@@ -1,0 +1,16 @@
+word,meaning_tamil,meaning_english,pos,source
+அன்பு,பாசம்;நேசம்,Love;Affection,noun,starter-data
+பாசம்,அன்பு;நேசம்,Affection;Love,noun,starter-data
+நேசம்,அன்பு;பாசம்,Love;Affection,noun,starter-data
+காதல்,அன்பு;நேசம்,Love;Romantic affection,noun,starter-data
+வெறுப்பு,பகைமை;விரோதம்,Hate;Dislike,noun,starter-data
+அகம்,உள்ளம்;உட்பகுதி,Inner self;Inside,noun,starter-data
+புறம்,வெளிப்பகுதி;வெளி,Outside;Exterior,noun,starter-data
+மனம்,உள்ளம்;சிந்தனை,Mind;Thought,noun,starter-data
+நட்பு,தோழமை;நண்புறவு,Friendship;Companionship,noun,starter-data
+இன்பம்,மகிழ்ச்சி;சுகம்,Happiness;Pleasure,noun,starter-data
+துன்பம்,துயரம்;வேதனை,Sorrow;Pain,noun,starter-data
+அறம்,நல்லொழுக்கம்;நீதி,Virtue;Righteousness,noun,starter-data
+புகழ்,பெருமை;கீர்த்தி,Fame;Glory,noun,starter-data
+வீரம்,துணிவு;துணிச்சல்,Bravery;Courage,noun,starter-data
+அமைதி,சமாதானம்;சாந்தம்,Peace;Calmness,noun,starter-data
