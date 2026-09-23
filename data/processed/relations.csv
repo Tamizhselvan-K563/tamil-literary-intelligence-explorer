@@ -1,0 +1,11 @@
+word,related_word,relation,confidence,source
+அன்பு,பாசம்,synonym,0.95,starter-data
+அன்பு,நேசம்,synonym,0.95,starter-data
+அன்பு,வெறுப்பு,antonym,0.90,starter-data
+அன்பு,காதல்,related,0.70,starter-data
+அன்பு,நட்பு,related,0.70,starter-data
+அகம்,புறம்,antonym,0.90,starter-data
+அகம்,மனம்,related,0.75,starter-data
+இன்பம்,துன்பம்,antonym,0.90,starter-data
+நட்பு,அன்பு,related,0.70,starter-data
+அறம்,நீதி,related,0.75,starter-data
