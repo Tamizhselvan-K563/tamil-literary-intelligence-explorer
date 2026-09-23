@@ -8,7 +8,6 @@ class TamilFaissSearch:
 
         self.texts = texts
 
-        # Convert embeddings to float32 for FAISS
         embeddings = np.asarray(
             embeddings,
             dtype="float32"
@@ -16,11 +15,9 @@ class TamilFaissSearch:
 
         self.dimension = embeddings.shape[1]
 
-        # Inner product works with normalized embeddings
-        # as a cosine-similarity style search.
-        self.index = faiss.IndexFlatIP(
-            self.dimension
-        )
+        # Inner Product works as cosine similarity
+        # because our embeddings are normalized.
+        self.index = faiss.IndexFlatIP(self.dimension)
 
         self.index.add(embeddings)
 
@@ -38,10 +35,7 @@ class TamilFaissSearch:
 
         results = []
 
-        for score, index in zip(
-            scores[0],
-            indexes[0]
-        ):
+        for score, index in zip(scores[0], indexes[0]):
 
             if index == -1:
                 continue

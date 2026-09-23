@@ -1,13 +1,13 @@
-from embeddings import load_model
+from embeddings import load_model, create_embeddings
 from faiss_search import TamilFaissSearch
 
 
 texts = [
-    "அன்பு என்பது ஒரு நல்ல உணர்வு.",
-    "பாசம் மனிதர்களை இணைக்கிறது.",
-    "காதல் மனிதர்களின் வாழ்க்கையில் முக்கியமான உணர்வு.",
+    "அன்பு என்பது உயர்ந்த பண்பு.",
+    "நேசம் மனிதர்களை இணைக்கிறது.",
     "வெறுப்பு ஒரு எதிர்மறையான உணர்வு.",
-    "தமிழ் இலக்கியம் மிகவும் பழமையானது."
+    "தமிழ் இலக்கியம் பல நூற்றாண்டுகளின் செல்வமாகும்.",
+    "நட்பு வாழ்க்கையில் முக்கியமான உறவாகும்."
 ]
 
 
@@ -16,13 +16,15 @@ print("Loading model...")
 model = load_model()
 
 
-print("Creating embeddings...")
+print("\nCreating embeddings...")
 
-embeddings = model.encode(
-    texts,
-    normalize_embeddings=True
+embeddings = create_embeddings(
+    model,
+    texts
 )
 
+
+print("\nBuilding FAISS index...")
 
 search_engine = TamilFaissSearch(
     embeddings,
@@ -30,12 +32,16 @@ search_engine = TamilFaissSearch(
 )
 
 
-query = "அன்பும் காதலும்"
+query = "மனிதர்களுக்கிடையிலான பாசம்"
 
 
-query_embedding = model.encode(
-    [query],
-    normalize_embeddings=True
+print("\nSearching for:")
+print(query)
+
+
+query_embedding = create_embeddings(
+    model,
+    [query]
 )[0]
 
 
@@ -45,15 +51,11 @@ results = search_engine.search(
 )
 
 
-print("\nQuery:")
-print(query)
-
-print("\nSemantic results:")
+print("\nTop results:")
 
 for result in results:
 
     print(
-        result["score"],
-        "|",
-        result["text"]
+        f"{result['score']} -> "
+        f"{result['text']}"
     )

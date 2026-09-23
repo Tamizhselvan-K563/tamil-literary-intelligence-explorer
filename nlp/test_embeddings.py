@@ -1,22 +1,20 @@
 from embeddings import load_model, create_embeddings
 
 
-model = load_model()
-
-
 texts = [
-    "அன்பு என்பது ஒரு நல்ல உணர்வு.",
-    "பாசம் மனிதர்களை இணைக்கிறது.",
+    "அன்பு என்பது உயர்ந்த பண்பு.",
+    "நேசம் மனிதர்களை இணைக்கிறது.",
     "வெறுப்பு ஒரு எதிர்மறையான உணர்வு.",
-    "தமிழ் இலக்கியம் மிகவும் பழமையானது."
+    "தமிழ் இலக்கியம் பல நூற்றாண்டுகளின் செல்வமாகும்."
 ]
 
 
-embeddings = create_embeddings(model, texts)
+model = load_model()
 
+embeddings = create_embeddings(model, texts)
 
 print("\nEmbedding shape:")
 print(embeddings.shape)
 
 print("\nFirst embedding:")
-print(embeddings[0][:10])
+print(embeddings[0])
