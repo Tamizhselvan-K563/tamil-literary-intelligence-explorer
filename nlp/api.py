@@ -9,6 +9,8 @@ app = FastAPI(
     version="1.0"
 )
 
+
+# Allow React frontend to communicate with FastAPI
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -40,8 +42,9 @@ def search(
     word: str,
     top_k: int = 3
 ):
-
-    return explorer.search(
+    result = explorer.search(
         word,
         top_k=top_k
     )
+
+    return result

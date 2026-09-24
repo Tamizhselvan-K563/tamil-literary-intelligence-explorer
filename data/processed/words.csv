@@ -1,16 +1,20 @@
-word,meaning_tamil,meaning_english,pos,source
-அன்பு,பாசம்;நேசம்,Love;Affection,noun,starter-data
-பாசம்,அன்பு;நேசம்,Affection;Love,noun,starter-data
-நேசம்,அன்பு;பாசம்,Love;Affection,noun,starter-data
-காதல்,அன்பு;நேசம்,Love;Romantic affection,noun,starter-data
-வெறுப்பு,பகைமை;விரோதம்,Hate;Dislike,noun,starter-data
-அகம்,உள்ளம்;உட்பகுதி,Inner self;Inside,noun,starter-data
-புறம்,வெளிப்பகுதி;வெளி,Outside;Exterior,noun,starter-data
-மனம்,உள்ளம்;சிந்தனை,Mind;Thought,noun,starter-data
-நட்பு,தோழமை;நண்புறவு,Friendship;Companionship,noun,starter-data
-இன்பம்,மகிழ்ச்சி;சுகம்,Happiness;Pleasure,noun,starter-data
-துன்பம்,துயரம்;வேதனை,Sorrow;Pain,noun,starter-data
-அறம்,நல்லொழுக்கம்;நீதி,Virtue;Righteousness,noun,starter-data
-புகழ்,பெருமை;கீர்த்தி,Fame;Glory,noun,starter-data
-வீரம்,துணிவு;துணிச்சல்,Bravery;Courage,noun,starter-data
-அமைதி,சமாதானம்;சாந்தம்,Peace;Calmness,noun,starter-data
+அறிவு,ஞானம்;புத்தி,Knowledge;Wisdom,noun,curated-data
+கல்வி,படிப்பு;வித்தை,Education;Learning,noun,curated-data
+முயற்சி,பிரயத்தனம்;உழைப்பு,Effort;Endeavour,noun,curated-data
+கோபம்,சினம்;வெகுளி,Anger;Rage,noun,curated-data
+சினம்,கோபம்;வெகுளி,Anger;Fury,noun,curated-data
+உதவி,துணை;ஒத்தாசை,Help;Assistance,noun,curated-data
+ஈகை,தானம்;கொடை,Charity;Generosity,noun,curated-data
+நல்லொழுக்கம்,நற்குணம்;ஒழுக்கம்,Good conduct;Virtue,noun,curated-data
+ஒழுக்கம்,நெறி;நன்னடத்தை,Discipline;Conduct,noun,curated-data
+நீதி,நியாயம்;நேர்மை,Justice;Fairness,noun,curated-data
+கருணை,இரக்கம்;அருள்,Compassion;Mercy,noun,curated-data
+பொறுமை,சகிப்புத்தன்மை;அமைதி,Patience;Tolerance,noun,curated-data
+உண்மை,மெய்மை;நிஜம்,Truth;Reality,noun,curated-data
+பொய்,பொய்மை;அசத்தியம்,Falsehood;Lie,noun,curated-data
+துணிவு,தைரியம்;வீரம்,Courage;Bravery,noun,curated-data
+பயம்,அச்சம்;திகில்,Fear;Apprehension,noun,curated-data
+மகிழ்ச்சி,சந்தோஷம்;இன்பம்,Happiness;Joy,noun,curated-data
+துயரம்,சோகம்;வேதனை,Sorrow;Grief,noun,curated-data
+செல்வம்,வளம்;பொருள்,Wealth;Prosperity,noun,curated-data
+நட்பு,தோழமை;நண்புறவு,Friendship;Companionship,noun,curated-data

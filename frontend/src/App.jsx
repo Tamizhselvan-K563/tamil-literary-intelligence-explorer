@@ -1,12 +1,14 @@
 import { useState } from "react";
 import "./App.css";
+import KnowledgeGraph from "./KnowledgeGraph";
 
 function App() {
-    const [searchResult, setSearchResult] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-  
-    const startVoiceSearch = () => {
+  const [searchedWord, setSearchedWord] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const startVoiceSearch = () => {
     if ("webkitSpeechRecognition" in window) {
       const recognition = new window.webkitSpeechRecognition();
 
@@ -26,7 +28,7 @@ function App() {
 
       recognition.onerror = () => {
         alert("Voice search could not be started.");
-      } ;
+      };
     } else {
       alert(
         "Voice search is not supported in this browser. Try Google Chrome."
@@ -34,46 +36,68 @@ function App() {
     }
   };
 
- const exploreWord = async () => {
-  const word =
-    document.getElementById("word-search").value.trim();
+  const exploreWord = async () => {
+    const word =
+      document.getElementById("word-search").value.trim();
 
-  if (word === "") {
-    alert("Please enter a Tamil word.");
-    return;
-  }
-
-  setLoading(true);
-  setError("");
-  setSearchResult(null);
-
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/search?word=${encodeURIComponent(word)}&top_k=3`
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch data from backend");
+    if (word === "") {
+      alert("Please enter a Tamil word.");
+      return;
     }
 
-    const data = await response.json();
+    // Show the searched word
+    setSearchedWord(word);
 
-    setSearchResult(data);
+    // Start loading
+    setLoading(true);
+    setError("");
+    setSearchResult(null);
 
-  } catch (err) {
-    console.error(err);
-    setError(
-      "Unable to connect to the Tamil Literary Intelligence backend."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/search?word=${encodeURIComponent(
+          word
+        )}&top_k=3`
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          "Failed to fetch data from backend"
+        );
+      }
+
+      const data = await response.json();
+
+      console.log("BACKEND RESPONSE:", data);
+
+      setSearchResult(data);
+
+      // Scroll AFTER the search result is available
+      setTimeout(() => {
+        document
+          .getElementById("knowledge-graph")
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+      }, 300);
+
+    } catch (err) {
+      console.error(err);
+
+      setError(
+        "Unable to connect to the Tamil Literary Intelligence backend."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="app">
 
-      {/* NAVBAR */}
+      {/* ================= NAVBAR ================= */}
+
       <nav className="navbar">
 
         <div className="brand">
@@ -93,7 +117,6 @@ function App() {
           </div>
 
         </div>
-
 
         <div className="nav-links">
 
@@ -118,13 +141,13 @@ function App() {
       </nav>
 
 
-      {/* HERO */}
+      {/* ================= HERO ================= */}
+
       <section className="hero">
 
         <div className="hero-label">
           TAMIL • LANGUAGE • LITERATURE • AI
         </div>
-
 
         <h1>
           Discover the
@@ -136,7 +159,6 @@ function App() {
           of Tamil.
         </h1>
 
-
         <p>
           Explore meanings, relationships and literary
           connections hidden inside every Tamil word.
@@ -144,12 +166,12 @@ function App() {
 
 
         {/* SEARCH */}
+
         <div className="search-box">
 
           <span className="search-icon">
             ⌕
           </span>
-
 
           <input
             id="word-search"
@@ -157,8 +179,6 @@ function App() {
             placeholder="Search a Tamil word..."
           />
 
-
-          {/* VOICE BUTTON */}
           <button
             className="voice-button"
             onClick={startVoiceSearch}
@@ -167,20 +187,23 @@ function App() {
             🎙
           </button>
 
-
-          {/* EXPLORE BUTTON */}
           <button
             className="explore-button"
             onClick={exploreWord}
+            disabled={loading}
           >
-            Explore →
+            {loading
+              ? "Exploring..."
+              : "Explore →"}
           </button>
 
         </div>
 
 
-        {/* SEARCH DESCRIPTION */}
+        {/* SEARCH HINT */}
+
         <div className="voice-hint">
+
           <span className="voice-dot"></span>
 
           Type a word or use voice search in Tamil
@@ -189,6 +212,7 @@ function App() {
 
 
         {/* EXAMPLES */}
+
         <div className="examples">
 
           <span>
@@ -197,8 +221,9 @@ function App() {
 
           <button
             onClick={() =>
-              document.getElementById("word-search").value =
-                "அன்பு"
+              document.getElementById(
+                "word-search"
+              ).value = "அன்பு"
             }
           >
             அன்பு
@@ -206,8 +231,9 @@ function App() {
 
           <button
             onClick={() =>
-              document.getElementById("word-search").value =
-                "அகம்"
+              document.getElementById(
+                "word-search"
+              ).value = "அகம்"
             }
           >
             அகம்
@@ -215,8 +241,9 @@ function App() {
 
           <button
             onClick={() =>
-              document.getElementById("word-search").value =
-                "அறம்"
+              document.getElementById(
+                "word-search"
+              ).value = "அறம்"
             }
           >
             அறம்
@@ -224,8 +251,9 @@ function App() {
 
           <button
             onClick={() =>
-              document.getElementById("word-search").value =
-                "வீரம்"
+              document.getElementById(
+                "word-search"
+              ).value = "வீரம்"
             }
           >
             வீரம்
@@ -234,171 +262,213 @@ function App() {
         </div>
 
       </section>
-      {/* SEARCH RESULTS */}
-{loading && (
-  <section className="results-section">
-    <div className="section-label">
-      AI ANALYSIS
-    </div>
-
-    <h2>
-      Analyzing Tamil literature...
-    </h2>
-
-    <p>
-      Finding meanings, relationships and literary connections.
-    </p>
-  </section>
-)}
-
-{error && (
-  <section className="results-section">
-    <div className="section-label">
-      ERROR
-    </div>
-
-    <h2>
-      Something went wrong
-    </h2>
-
-    <p>{error}</p>
-  </section>
-)}
-
-{searchResult && !loading && (
-  <section className="results-section">
-
-    <div className="section-label">
-      WORD INTELLIGENCE
-    </div>
-
-    <h2>
-      {searchResult.word}
-    </h2>
-
-    {/* MEANINGS */}
-    <div className="result-block">
-
-      <h3>Tamil Meaning</h3>
-
-      <div className="meaning-list">
-        {searchResult.meanings_tamil?.map(
-          (meaning, index) => (
-            <span key={index}>
-              {meaning}
-            </span>
-          )
-        )}
-      </div>
-
-    </div>
 
 
-    {/* ENGLISH MEANINGS */}
-    <div className="result-block">
+      {/* ================= SEARCH LOADING ================= */}
 
-      <h3>English Meaning</h3>
+      {loading && (
 
-      <div className="meaning-list">
-        {searchResult.meanings_english?.map(
-          (meaning, index) => (
-            <span key={index}>
-              {meaning}
-            </span>
-          )
-        )}
-      </div>
+        <section className="results-section">
 
-    </div>
+          <div className="section-label">
+            AI ANALYSIS
+          </div>
+
+          <h2>
+            Analyzing Tamil literature...
+          </h2>
+
+          <p>
+            Finding meanings, relationships and
+            literary connections.
+          </p>
+
+        </section>
+
+      )}
 
 
-    {/* RELATIONSHIPS */}
-    <div className="result-block">
+      {/* ================= ERROR ================= */}
 
-      <h3>Word Relationships</h3>
+      {error && (
 
-      <div className="relationship-list">
+        <section className="results-section">
 
-        {searchResult.relationships?.map(
-          (item, index) => (
+          <div className="section-label">
+            ERROR
+          </div>
 
-            <div
-              className="relationship-item"
-              key={index}
-            >
+          <h2>
+            Something went wrong
+          </h2>
 
-              <strong>
-                {item.word}
-              </strong>
+          <p>
+            {error}
+          </p>
 
-              <span>
-                {item.relation}
-              </span>
+        </section>
+
+      )}
+
+
+      {/* ================= SEARCH RESULTS ================= */}
+
+      {searchResult && !loading && (
+
+        <section className="results-section">
+
+          <div className="section-label">
+            WORD INTELLIGENCE
+          </div>
+
+          <h2>
+            {searchResult.word}
+          </h2>
+
+
+          {/* TAMIL MEANINGS */}
+
+          <div className="result-block">
+
+            <h3>
+              Tamil Meaning
+            </h3>
+
+            <div className="meaning-list">
+
+              {searchResult.meanings_tamil?.map(
+                (meaning, index) => (
+
+                  <span key={index}>
+                    {meaning}
+                  </span>
+
+                )
+              )}
 
             </div>
 
-          )
-        )}
-
-      </div>
-
-    </div>
+          </div>
 
 
-    {/* LITERATURE */}
-    <div className="result-block">
+          {/* ENGLISH MEANINGS */}
 
-      <h3>Literary Connections</h3>
+          <div className="result-block">
 
-      <div className="literature-list">
+            <h3>
+              English Meaning
+            </h3>
 
-        {searchResult.literary_results?.map(
-          (item, index) => (
+            <div className="meaning-list">
 
-            <div
-              className="literature-card"
-              key={index}
-            >
+              {searchResult.meanings_english?.map(
+                (meaning, index) => (
 
-              <p>
-                {item.literary_text}
-              </p>
+                  <span key={index}>
+                    {meaning}
+                  </span>
 
-              <div>
-                {item.work} • {item.author}
-              </div>
-
-              <small>
-                Theme: {item.theme}
-              </small>
+                )
+              )}
 
             </div>
 
-          )
-        )}
-
-      </div>
-
-    </div>
-
-  </section>
-)}
+          </div>
 
 
-      {/* DISCOVER */}
+          {/* RELATIONSHIPS LIST */}
+
+          <div className="result-block">
+
+            <h3>
+              Word Relationships
+            </h3>
+
+            <div className="relationship-list">
+
+              {searchResult.relationships?.map(
+                (item, index) => (
+
+                  <div
+                    className="relationship-item"
+                    key={index}
+                  >
+
+                    <strong>
+                      {item.word}
+                    </strong>
+
+                    <span>
+                      {item.relation}
+                    </span>
+
+                  </div>
+
+                )
+              )}
+
+            </div>
+
+          </div>
+
+
+          {/* LITERATURE */}
+
+          <div className="result-block">
+
+            <h3>
+              Literary Connections
+            </h3>
+
+            <div className="literature-list">
+
+              {searchResult.literary_results?.map(
+                (item, index) => (
+
+                  <div
+                    className="literature-card"
+                    key={index}
+                  >
+
+                    <p>
+                      {item.literary_text}
+                    </p>
+
+                    <div>
+                      {item.work} • {item.author}
+                    </div>
+
+                    <small>
+                      Theme: {item.theme}
+                    </small>
+
+                  </div>
+
+                )
+              )}
+
+            </div>
+
+          </div>
+
+        </section>
+
+      )}
+
+
+      {/* ================= DISCOVER ================= */}
+
       <section className="discover">
 
         <div className="section-label">
           DISCOVER
         </div>
 
-
         <h2>
           One word.
           <br />
           Many connections.
         </h2>
-
 
         <p>
           A Tamil word can carry meaning, relationships,
@@ -408,45 +478,42 @@ function App() {
       </section>
 
 
-      {/* THREE FEATURES */}
+      {/* ================= THREE FEATURES ================= */}
+
       <section className="features">
 
 
         {/* WORD EXPLORER */}
+
         <div className="feature-card">
 
           <div className="feature-number">
             01
           </div>
 
-
           <div className="feature-icon">
             ◇
           </div>
-
 
           <div className="feature-label">
             EXPLORE
           </div>
 
-
           <h3>
             Word Explorer
           </h3>
-
 
           <p>
             Understand Tamil words through their meanings,
             English translations, synonyms and antonyms.
           </p>
 
-
           <button
             className="feature-link"
             onClick={() =>
               document
                 .getElementById("word-search")
-                .focus()
+                ?.focus()
             }
           >
             Explore words →
@@ -455,72 +522,81 @@ function App() {
         </div>
 
 
-
         {/* KNOWLEDGE GRAPH */}
+
         <div className="feature-card highlight">
 
           <div className="feature-number">
             02
           </div>
 
-
           <div className="feature-icon">
             ✦
           </div>
-
 
           <div className="feature-label">
             CONNECT
           </div>
 
-
           <h3>
             Knowledge Graph
           </h3>
-
 
           <p>
             Visualize connections between synonyms,
             antonyms and related Tamil words.
           </p>
 
+          <button
+            className="feature-link"
+            onClick={() => {
 
-          <button className="feature-link">
+              if (!searchedWord) {
+                document
+                  .getElementById("word-search")
+                  ?.focus();
+
+                return;
+              }
+
+              document
+                .getElementById("knowledge-graph")
+                ?.scrollIntoView({
+                  behavior: "smooth"
+                });
+
+            }}
+          >
             Explore connections →
           </button>
 
         </div>
 
 
-
         {/* LITERARY CONTEXT */}
+
         <div className="feature-card">
 
           <div className="feature-number">
             03
           </div>
 
-
           <div className="feature-icon">
             ❖
           </div>
-
 
           <div className="feature-label">
             CONTEXT
           </div>
 
-
           <h3>
             Literary Context
           </h3>
-
 
           <p>
             Discover how Tamil words appear and evolve
             across Sangam, medieval and epic literature.
           </p>
-
 
           <button className="feature-link">
             Read literature →
@@ -531,13 +607,25 @@ function App() {
       </section>
 
 
-      {/* VOICE FEATURE */}
+      {/* ================= KNOWLEDGE GRAPH ================= */}
+
+      {searchedWord && (
+
+        <KnowledgeGraph
+          word={searchedWord}
+          relationships={[]}
+        />
+
+      )}
+
+
+      {/* ================= VOICE FEATURE ================= */}
+
       <section className="voice-section">
 
         <div className="voice-section-icon">
           🎙
         </div>
-
 
         <div>
 
@@ -545,13 +633,14 @@ function App() {
             VOICE SEARCH
           </div>
 
-
           <h2>
             Speak in Tamil.
             <br />
-            <span>Explore with your voice.</span>
-          </h2>
 
+            <span>
+              Explore with your voice.
+            </span>
+          </h2>
 
           <p>
             Search Tamil words naturally using your voice
@@ -560,7 +649,6 @@ function App() {
           </p>
 
         </div>
-
 
         <button
           className="voice-large-button"
@@ -572,16 +660,15 @@ function App() {
       </section>
 
 
-      {/* CLOSING */}
+      {/* ================= CLOSING ================= */}
+
       <section className="closing">
 
         <div className="closing-line"></div>
 
-
         <div className="closing-label">
           TAMIL LITERARY INTELLIGENCE EXPLORER
         </div>
-
 
         <h2>
           From a word's meaning
@@ -592,7 +679,6 @@ function App() {
           </span>
         </h2>
 
-
         <p>
           Ancient language. Connected knowledge.
         </p>
@@ -600,13 +686,13 @@ function App() {
       </section>
 
 
-      {/* FOOTER */}
+      {/* ================= FOOTER ================= */}
+
       <footer>
 
         <div className="footer-brand">
           தமிழ்
         </div>
-
 
         <div>
           WORDS • LITERATURE • KNOWLEDGE

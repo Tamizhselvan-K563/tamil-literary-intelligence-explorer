@@ -1,7 +1,3 @@
-class TamilContextAnalyzer:
-    def __init__(self):
-        print("Tamil Context Analyzer loaded!")
-        
 import pandas as pd
 import numpy as np
 
@@ -51,18 +47,21 @@ class TamilContextAnalyzer:
             row["meaning_english"]
         ).split(";")
 
-        context_embedding = self.model.encode(
-            [context],
-            normalize_embeddings=True
-        )
-
         meaning_texts = [
             f"{word}: {meaning}"
             for meaning in tamil_meanings
         ]
 
+        context_embedding = self.model.encode(
+            [f"query: {context}"],
+            normalize_embeddings=True
+        )
+
         meaning_embeddings = self.model.encode(
-            meaning_texts,
+            [
+                f"passage: {meaning}"
+                for meaning in meaning_texts
+            ],
             normalize_embeddings=True
         )
 
@@ -75,10 +74,10 @@ class TamilContextAnalyzer:
 
         best_tamil = tamil_meanings[best_index]
 
+        best_english = ""
+
         if best_index < len(english_meanings):
             best_english = english_meanings[best_index]
-        else:
-            best_english = ""
 
         return {
             "word": word,
